@@ -56,7 +56,7 @@ samp %>%
 
 **Would you expect another student's sample proportion to be identical to yours? Would you expect it to be similar? Why or why not?**
 
-I would expect another student's sample proportion to be similar, but not identical due to random variabiliy in the sample.
+I would expect another student's sample proportion to be similar, but not identical due to random variability in the sample.
 
 ### Exercise 3
 
@@ -68,7 +68,7 @@ This means we are 95% confident that the population proportion is contained betw
 
 **Does your confidence interval capture the true population proportion of US adults who think climate change affects their local community? If you are working on this lab in a classroom, does your neighbor's interval capture this value?**
 
-My confidence interval (0.53 to 0.783) contains the population proportion of .65. We would expect our neighbor's interval to be 95% likely to capture this value as well.
+My confidence interval (0.53 to 0.783) contains the known population proportion of .65. We would expect our neighbor's interval to be 95% likely to capture this value as well.
 
 ```{r exercise-4}
 samp %>%
@@ -87,6 +87,72 @@ We would expect about 95% of these confidence intervals to capture the true popu
 ### Exercise 6
 
 **Given a sample size of 60, 1000 bootstrap samples for each interval, and 50 confidence intervals constructed (the default values for the above app), what proportion of your confidence intervals include the true population proportion? Is this proportion exactly equal to the confidence level? If not, explain why.Make sure to include your plot in your answer.**
+
+In this bootstrap sample, 49 out of 50 confidence intervals (98%) contained the true population proportion.  This is higher than the 95% confidence level due to variablity in the sampling - additional bootstrap samples may produce different results above and below the expected value of 95%.
+
+![](https://raw.githubusercontent.com/jefedigital/cuny-data-606-projects/main/Lab5b/images/ce_60_1000_95.png)
+
+### Exercise 7
+
+**Choose a different confidence level than 95%. Would you expect a confidence interval at this level to me wider or narrower than the confidence interval you calculated at the 95% confidence level? Explain your reasoning.**
+
+Setting a higher confidence level creates a wider confidence interval, and vice-versa.  The range of the confidence interval is defined by the z-score associated with the level of certainty. For instance, approximately 2 standard deviations above and below the mean should account for 95% of all values (z-score = 1.96) while 2.5 standard deviations would be required to account for 99% of all values (z-score = 2.576.)
+
+![](https://raw.githubusercontent.com/jefedigital/cuny-data-606-projects/main/Lab5b/images/ce_60_1000_50.png)
+
+### Exercise 8
+
+**Using code from the infer package and data fromt the one sample you have  (`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a  confidence level of your choosing (other than 95%) and interpret it.**
+
+We are 99% confident the population proportion of US Adults who think climate change is affecting their local community is between 0.5 and 0.8.
+
+```{r exercise-8}
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type="bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.99)
+```
+
+### Exercise 9
+
+**Using the app, calculate 50 confidence intervals at the confidence level you chose in the previous question, and plot all intervals on one plot, and calculate the proportion of intervals that include the true population proportion. How does this percentage compare to the confidence level selected for the intervals?**
+
+In this bootstrap sample, 49 out of 50 confidence intervals (98%) contained the true population proportion, which is slightly under the 99% confidence level defined.
+
+![](https://raw.githubusercontent.com/jefedigital/cuny-data-606-projects/main/Lab5b/images/ce_60_1000_99.png)
+
+### Exercise 10
+
+**Lastly, try one more (different) confidence level. First, state how you expect the width of this interval to compare to previous ones you calculated. Then, calculate the bounds of the interval using the infer package and data from `samp` and interpret it. Finally, use the app to generate many intervals and calculate the proportion of intervals that are capture the true population proportion.**
+
+Setting our confidence level to 75%, we would expect the range of the confidence interval to be smaller than that for 95%, but larger than that for 50%.   The resulting confidence interval bounds are 58.3% and 71.7%, which captures the true population proportion of 67%.  
+
+```{r exercise-10}
+samp %>%
+  specify(response = climate_change_affects, success = "Yes") %>%
+  generate(reps = 1000, type="bootstrap") %>%
+  calculate(stat = "prop") %>%
+  get_ci(level = 0.75)
+```
+
+### Exercise 11
+
+**Using the app, experiment with different sample sizes and comment on how the widths of intervals change as sample size changes (increases and decreases).**
+
+```{r exercise-11}
+
+```
+
+### Exercise 12
+
+**Finally, given a sample size (say, 60), how does the width of the interval change as you increase the number of bootstrap samples. Hint: Does changing the number of bootstrap samples affect the standard error?**
+
+```{r exercise-12}
+
+```
+
+---
 
 ```{r shiny, echo=FALSE, eval=TRUE, results = TRUE}
 # This R chunk will only run in interactive mode
@@ -197,59 +263,3 @@ shinyApp(
   options = list(height = 700)
 )
 ```
-
-Paste image here
-
-### Exercise 7
-
-**Choose a different confidence level than 95%. Would you expect a confidence interval at this level to me wider or narrower than the confidence interval you calculated at the 95% confidence level? Explain your reasoning.**
-
-Setting a higher confidence level creates a wider confidence interval, and vice-versa.  The range of the confidence interval is defined by the z-score associated with the level of certainty. For instance, approximately 2 standard deviations above and below the mean should account for 95% of all values (z-score = 1.96) while 2.5 standard deviations would be required to account for 99% of all values (z-score = 2.576.)
-
-
-### Exercise 8
-
-**Using code from the infer package and data fromt the one sample you have  (`samp`), find a confidence interval for the proportion of US Adults who think climate change is affecting their local community with a  confidence level of your choosing (other than 95%) and interpret it.**
-
-We are 99% confident the population proportion of US Adults who think climate change is affecting their local community is between 0.5 and 0.8.
-
-```{r exercise-8}
-samp %>%
-  specify(response = climate_change_affects, success = "Yes") %>%
-  generate(reps = 1000, type="bootstrap") %>%
-  calculate(stat = "prop") %>%
-  get_ci(level = 0.99)
-```
-
-### Exercise 9
-
-**Using the app, calculate 50 confidence intervals at the confidence level you chose in the previous question, and plot all intervals on one plot, and calculate the proportion of intervals that include the true population proportion. How does this percentage compare to the confidence level selected for the intervals?**
-
-```{r exercise-9}
-
-```
-
-### Exercise 10
-
-**Lastly, try one more (different) confidence level. First, state how you expect the width of this interval to compare to previous ones you calculated. Then, calculate the bounds of the interval using the infer package and data from `samp` and interpret it. Finally, use the app to generate many intervals and calculate the proportion of intervals that are capture the true population proportion.**
-
-```{r exercise-10}
-
-```
-
-### Exercise 11
-
-**Using the app, experiment with different sample sizes and comment on how the widths of intervals change as sample size changes (increases and decreases).**
-
-```{r exercise-11}
-
-```
-
-### Exercise 12
-
-**Finally, given a sample size (say, 60), how does the width of the interval change as you increase the number of bootstrap samples. Hint: Does changing the number of bootstrap samples affect the standard error?**
-
-```{r exercise-12}
-
-```
-
